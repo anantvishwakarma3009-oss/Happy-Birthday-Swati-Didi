@@ -31,6 +31,17 @@
             <button onclick="setFilter('year')" id="btn-year" class="flex-1 min-w-[65px] text-center py-2 rounded-lg text-[11px] font-semibold transition text-slate-400">Yearly</button>
         </div>
 
+        <div id="balance-card" class="bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl transition-all duration-300">
+            <div class="flex justify-between items-center">
+                <div>
+                    <span id="label-balance" class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">Net Balance (All Time)</span>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Kamai me se Kharcha nikal kar kitna bacha</p>
+                </div>
+                <span class="text-2xl" id="balance-emoji">💰</span>
+            </div>
+            <h2 id="stat-balance" class="text-2xl font-black mt-3 text-emerald-400 tracking-tight">₹0</h2>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl shadow-md">
                 <span id="label-income" class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Income (All)</span>
@@ -168,7 +179,6 @@
 
         // 🤝 KHATA CLEAR SETTLEMENT FUNCTION 
         function clearKhataItem(id) {
-            // Khata account remove karke realtime variables recalculate karne ke liye
             coreDatabase = coreDatabase.filter(item => item.id !== id);
             saveAndRebootUI();
         }
@@ -198,7 +208,6 @@
         function evaluateTimeframeMatch(itemDateStr) {
             if (currentFilter === 'all') return true;
 
-            // Strict conversion string to local date object mapping
             const parts = itemDateStr.split('-');
             const recordDate = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0, 0);
 
@@ -223,36 +232,58 @@
         }
 
         function syncPipeline() {
-            // 1. Separate contexts cleanly
             const ledgerTypes = ['income', 'expense'];
             const khataTypes = ['receive', 'pay'];
 
             // Filter ledger dataset in real time
             const filteredLedger = coreDatabase.filter(item => ledgerTypes.includes(item.type) && evaluateTimeframeMatch(item.date));
             
-            // Khata Book calculation is global tracking (independent of transaction time tabs)
+            // Khata Book calculation is global tracking
             const activeKhata = coreDatabase.filter(item => khataTypes.includes(item.type));
 
-            // 2. Calculations parameters
+            // Calculations parameters
             let inc = filteredLedger.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
             let exp = filteredLedger.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
             
             let rec = activeKhata.filter(u => u.type === 'receive').reduce((s, u) => s + u.amount, 0);
             let pay = activeKhata.filter(u => u.type === 'pay').reduce((s, u) => s + u.amount, 0);
 
-            // Update Text Nodes
-            const filterLabelText = currentFilter === 'all' ? 'All' : currentFilter.toUpperCase();
+            // NEW CRITICAL MATRIX CALCULATION: Net Balance (Income - Expense Only)
+            let netBalance = inc - exp;
+
+            // Update Text Nodes Labels
+            const filterLabelText = currentFilter === 'all' ? 'All Time' : currentFilter.toUpperCase();
             document.getElementById('label-income').innerText = `Income (${filterLabelText})`;
             document.getElementById('label-expense').innerText = `Expense (${filterLabelText})`;
             document.getElementById('badge-filter').innerText = `${currentFilter} view state`;
             document.getElementById('chart-title').innerText = `Visual Ratio (${filterLabelText})`;
+            document.getElementById('label-balance').innerText = `Net Balance (${filterLabelText})`;
 
             document.getElementById('stat-income').innerText = `₹${inc.toLocaleString('en-IN')}`;
             document.getElementById('stat-expense').innerText = `₹${exp.toLocaleString('en-IN')}`;
             document.getElementById('stat-receive').innerText = `₹${rec.toLocaleString('en-IN')}`;
             document.getElementById('stat-pay').innerText = `₹${pay.toLocaleString('en-IN')}`;
+            
+            // Render Net Balance Value & Color States Adaptive Pipeline
+            const balanceTextNode = document.getElementById('stat-balance');
+            const balanceCardNode = document.getElementById('balance-card');
+            const balanceEmojiNode = document.getElementById('balance-emoji');
 
-            // 3. Vector Graph Realtime Renderer
+            balanceTextNode.innerText = `₹${netBalance.toLocaleString('en-IN')}`;
+
+            if (netBalance >= 0) {
+                // Positive Balance: Green UI Styling
+                balanceCardNode.className = "bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl transition-all duration-300";
+                balanceTextNode.className = "text-2xl font-black mt-3 text-emerald-400 tracking-tight";
+                balanceEmojiNode.innerText = "💰";
+            } else {
+                // Negative Balance (Debt/Overspent): Red UI Styling
+                balanceCardNode.className = "bg-gradient-to-br from-slate-900 via-rose-950/20 to-slate-900 border border-rose-500/30 p-5 rounded-2xl shadow-xl transition-all duration-300";
+                balanceTextNode.className = "text-2xl font-black mt-3 text-rose-400 tracking-tight";
+                balanceEmojiNode.innerText = "⚠️";
+            }
+
+            // Vector Graph Realtime Renderer
             const totalScaleMax = Math.max(inc, exp, 1);
             const incPercentage = (inc / totalScaleMax) * 100;
             const expPercentage = (exp / totalScaleMax) * 100;
@@ -268,7 +299,7 @@
                 </div>
             `;
 
-            // 4. Render Ledger Feed
+            // Render Ledger Feed
             const ledgerElement = document.getElementById('ledger-list');
             if (filteredLedger.length === 0) {
                 ledgerElement.innerHTML = `<p class="text-slate-600 text-center text-[11px] py-6">No records match this selected filter timeframe.</p>`;
@@ -290,7 +321,7 @@
                 `).join('');
             }
 
-            // 5. Render Khata Book Feed with Clear Trigger Hook
+            // Render Khata Book Feed
             const khataElement = document.getElementById('khata-list');
             if (activeKhata.length === 0) {
                 khataElement.innerHTML = `<p class="text-slate-600 text-center text-[11px] py-6">No pending credits or debits registered.</p>`;
@@ -308,18 +339,4 @@
                             <span class="text-xs font-bold ${item.type === 'receive' ? 'text-sky-400' : 'text-amber-400'}">
                                 ₹${item.amount.toLocaleString('en-IN')}
                             </span>
-                            <button onclick="clearKhataItem('${item.id}')" class="bg-slate-900 hover:bg-emerald-500/20 text-emerald-400 border border-slate-800 text-[10px] font-semibold px-2 py-1 rounded-lg transition">
-                                ✓ Clear
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        // Bootstrap Core Render Core Execution
-        syncPipeline();
-    </script>
-</body>
-</html>
-
+                            <butto
