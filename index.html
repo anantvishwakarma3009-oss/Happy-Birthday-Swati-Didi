@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinVue Pro - Strict Mobile Edition</title>
+    <title>FinVue Pro - Chrome Mobile Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -31,7 +31,7 @@
             <button onclick="setFilter('year')" id="btn-year" class="flex-1 min-w-[65px] text-center py-2 rounded-lg text-[11px] font-semibold transition text-slate-400">Yearly</button>
         </div>
 
-        <div id="balance-card" class="bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl transition-all duration-300">
+        <div id="balance-card" class="bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl">
             <div class="flex justify-between items-center">
                 <div>
                     <span id="label-balance" class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">Net Balance (All Time)</span>
@@ -44,11 +44,11 @@
 
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl shadow-md">
-                <span id="label-income" class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Income (All)</span>
+                <span id="label-income" class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Income (All Time)</span>
                 <h2 id="stat-income" class="text-lg font-bold mt-1 text-slate-100">₹0</h2>
             </div>
             <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl shadow-md">
-                <span id="label-expense" class="text-[9px] font-bold text-rose-400 uppercase tracking-wider">Expense (All)</span>
+                <span id="label-expense" class="text-[9px] font-bold text-rose-400 uppercase tracking-wider">Expense (All Time)</span>
                 <h2 id="stat-expense" class="text-lg font-bold mt-1 text-slate-100">₹0</h2>
             </div>
             <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl shadow-md">
@@ -62,24 +62,12 @@
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-lg">
-            <div class="flex justify-between items-center mb-3">
-                <span id="chart-title" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Visual Chart (All Time)</span>
-                <div class="flex gap-2 text-[8px] font-semibold uppercase">
-                    <div class="flex items-center gap-1"><span class="w-2 h-2 bg-emerald-500 rounded-sm"></span><span class="text-slate-400">In</span></div>
-                    <div class="flex items-center gap-1"><span class="w-2 h-2 bg-rose-500 rounded-sm"></span><span class="text-slate-400">Out</span></div>
-                </div>
-            </div>
-            <div id="chart-container" class="h-28 flex items-end gap-6 border-b border-slate-800 pb-2 px-4">
-                </div>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-lg">
             <h3 class="text-xs font-bold uppercase text-slate-300 mb-3">➕ Post Entry / Register Udhaar</h3>
             
             <div class="space-y-3">
                 <div>
                     <label class="block text-[10px] text-slate-400 font-medium mb-1">Entry Type</label>
-                    <select id="tx-type" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 focus:border-indigo-500 outline-none">
+                    <select id="tx-type" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 outline-none">
                         <option value="income">Income (+ Kamai)</option>
                         <option value="expense">Expense (- Kharcha)</option>
                         <option value="receive">Lena Hai (Khata Book)</option>
@@ -89,21 +77,21 @@
                 
                 <div>
                     <label class="block text-[10px] text-slate-400 font-medium mb-1">Description / Person Name</label>
-                    <input type="text" id="tx-desc" placeholder="e.g., Salary, Food, Rahul, Amit" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 focus:border-indigo-500 outline-none">
+                    <input type="text" id="tx-desc" placeholder="e.g., Salary, Food, Rahul, Amit" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 outline-none">
                 </div>
                 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-[10px] text-slate-400 font-medium mb-1">Amount (₹)</label>
-                        <input type="number" id="tx-amount" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 focus:border-indigo-500 outline-none">
+                        <input type="number" id="tx-amount" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 outline-none">
                     </div>
                     <div>
                         <label class="block text-[10px] text-slate-400 font-medium mb-1">Date</label>
-                        <input type="date" id="tx-date" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 focus:border-indigo-500 outline-none">
+                        <input type="date" id="tx-date" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-slate-200 outline-none">
                     </div>
                 </div>
                 
-                <button type="button" onclick="handleFormSubmit()" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase p-3 rounded-xl shadow-md transition active:scale-[0.98] cursor-pointer">
+                <button type="button" id="main-submit-btn" class="w-full mt-2 bg-indigo-600 text-white font-bold text-xs uppercase p-3 rounded-xl shadow-md">
                     Save Transaction
                 </button>
             </div>
@@ -125,52 +113,47 @@
     </div>
 
     <script>
-        // Universal Safe Storage Arrays
         let coreDatabase = [];
         let currentFilter = 'all';
 
-        // Safe Fallback LocalStorage Parser
+        // Chrome Safe Parser
         try {
-            const rawData = localStorage.getItem('finvue_mobile_v5');
+            const rawData = localStorage.getItem('finvue_chrome_v6');
             if (rawData) {
                 coreDatabase = JSON.parse(rawData);
             }
-        } catch(e) {
-            console.log("LocalStorage blocked by mobile browser sandbox. Memory Engine Active.");
-        }
+        } catch(e) {}
 
         if (!Array.isArray(coreDatabase)) coreDatabase = [];
 
-        // Safe Date Setup (Works flawlessly on ALL mobile browsers)
-        function getSecureTodayString() {
+        function getSafeTodayDate() {
             const d = new Date();
-            const year = d.getFullYear();
-            let month = '' + (d.getMonth() + 1);
-            let day = '' + d.getDate();
-
-            if (month.length < 2) month = '0' + month;
+            const y = d.getFullYear();
+            let m = (d.getMonth() + 1).toString();
+            let day = d.getDate().toString();
+            if (m.length < 2) m = '0' + m;
             if (day.length < 2) day = '0' + day;
-
-            return [year, month, day].join('-');
+            return y + '-' + m + '-' + day;
         }
 
-        document.getElementById('tx-date').value = getSecureTodayString();
+        document.getElementById('tx-date').value = getSafeTodayDate();
 
-        // 100% Isolated Submit Handler
-        function handleFormSubmit() {
+        // Safe Chrome Click Interceptor
+        document.getElementById('main-submit-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
             const type = document.getElementById('tx-type').value;
             const desc = document.getElementById('tx-desc').value.trim();
-            const amountInput = document.getElementById('tx-amount').value;
-            const amount = parseFloat(amountInput);
+            const amtRaw = document.getElementById('tx-amount').value;
+            const amount = parseFloat(amtRaw);
             let date = document.getElementById('tx-date').value;
 
-            if (!desc || isNaN(amount) || amount <= 0 || amountInput === "") {
-                alert("Please fill description and valid positive amount.");
+            if (!desc || isNaN(amount) || amount <= 0 || amtRaw === "") {
+                alert("Please enter a valid description and positive amount.");
                 return;
             }
-            if (!date) date = getSecureTodayString();
+            if (!date) date = getSafeTodayDate();
 
-            // Unique ID generation without complex math
             const uniqueId = 'id-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
 
             coreDatabase.push({
@@ -181,36 +164,33 @@
                 date: date
             });
 
-            saveAndRebootUI();
+            try {
+                localStorage.setItem('finvue_chrome_v6', JSON.stringify(coreDatabase));
+            } catch(err) {}
 
-            // Reset Form Fields Safely
             document.getElementById('tx-desc').value = '';
             document.getElementById('tx-amount').value = '';
-            document.getElementById('tx-date').value = getSecureTodayString();
-        }
+            document.getElementById('tx-date').value = getSafeTodayDate();
+
+            syncPipeline();
+        });
 
         function deleteItem(id) {
             coreDatabase = coreDatabase.filter(item => item.id !== id);
-            saveAndRebootUI();
+            try { localStorage.setItem('finvue_chrome_v6', JSON.stringify(coreDatabase)); } catch(e) {}
+            syncPipeline();
         }
 
         function clearKhataItem(id) {
             coreDatabase = coreDatabase.filter(item => item.id !== id);
-            saveAndRebootUI();
-        }
-
-        function saveAndRebootUI() {
-            try {
-                localStorage.setItem('finvue_mobile_v5', JSON.stringify(coreDatabase));
-            } catch(e) {}
+            try { localStorage.setItem('finvue_chrome_v6', JSON.stringify(coreDatabase)); } catch(e) {}
             syncPipeline();
         }
 
         function setFilter(type) {
             currentFilter = type;
-            const filterButtons = ['all', 'day', 'week', 'month', 'year'];
-            filterButtons.forEach(f => {
-                const btn = document.getElementById(`btn-${f}`);
+            ['all', 'day', 'week', 'month', 'year'].forEach(f => {
+                const btn = document.getElementById('btn-' + f);
                 if (btn) {
                     btn.className = (f === type)
                         ? "flex-1 min-w-[65px] text-center py-2 rounded-lg text-[11px] font-semibold transition bg-indigo-600 text-white shadow-md"
@@ -220,7 +200,6 @@
             syncPipeline();
         }
 
-        // Safe Date Evaluation for Mobile
         function evaluateTimeframeMatch(itemDateStr) {
             if (currentFilter === 'all') return true;
             if (!itemDateStr) return false;
@@ -229,13 +208,11 @@
             if(parts.length !== 3) return false;
             
             const recordDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]), 0, 0, 0, 0);
-
             const today = new Date();
             today.setHours(0,0,0,0);
 
             if (currentFilter === 'day') {
-                const todayStr = getSecureTodayString();
-                return itemDateStr === todayStr;
+                return itemDateStr === getSafeTodayDate();
             }
             if (currentFilter === 'week') {
                 const boundary = new Date(today);
@@ -252,11 +229,8 @@
         }
 
         function syncPipeline() {
-            const ledgerTypes = ['income', 'expense'];
-            const khataTypes = ['receive', 'pay'];
-
-            const filteredLedger = coreDatabase.filter(item => ledgerTypes.includes(item.type) && evaluateTimeframeMatch(item.date));
-            const activeKhata = coreDatabase.filter(item => khataTypes.includes(item.type));
+            const filteredLedger = coreDatabase.filter(item => (item.type === 'income' || item.type === 'expense') && evaluateTimeframeMatch(item.date));
+            const activeKhata = coreDatabase.filter(item => (item.type === 'receive' || item.type === 'pay'));
 
             let inc = 0, exp = 0, rec = 0, pay = 0;
 
@@ -273,51 +247,36 @@
             let netBalance = inc - exp;
 
             const filterLabelText = currentFilter === 'all' ? 'All Time' : currentFilter.toUpperCase();
-            document.getElementById('label-income').innerText = `Income (${filterLabelText})`;
-            document.getElementById('label-expense').innerText = `Expense (${filterLabelText})`;
-            document.getElementById('badge-filter').innerText = `${currentFilter} view state`;
-            document.getElementById('chart-title').innerText = `Visual Ratio (${filterLabelText})`;
-            document.getElementById('label-balance').innerText = `Net Balance (${filterLabelText})`;
+            document.getElementById('label-income').innerText = 'Income (' + filterLabelText + ')';
+            document.getElementById('label-expense').innerText = 'Expense (' + filterLabelText + ')';
+            document.getElementById('badge-filter').innerText = currentFilter + ' view state';
+            document.getElementById('label-balance').innerText = 'Net Balance (' + filterLabelText + ')';
 
-            document.getElementById('stat-income').innerText = `₹${inc.toLocaleString('en-IN')}`;
-            document.getElementById('stat-expense').innerText = `₹${exp.toLocaleString('en-IN')}`;
-            document.getElementById('stat-receive').innerText = `₹${rec.toLocaleString('en-IN')}`;
-            document.getElementById('stat-pay').innerText = `₹${pay.toLocaleString('en-IN')}`;
+            document.getElementById('stat-income').innerText = '₹' + inc.toLocaleString('en-IN');
+            document.getElementById('stat-expense').innerText = '₹' + exp.toLocaleString('en-IN');
+            document.getElementById('stat-receive').innerText = '₹' + rec.toLocaleString('en-IN');
+            document.getElementById('stat-pay').innerText = '₹' + pay.toLocaleString('en-IN');
             
             const balanceTextNode = document.getElementById('stat-balance');
             const balanceCardNode = document.getElementById('balance-card');
             const balanceEmojiNode = document.getElementById('balance-emoji');
 
-            balanceTextNode.innerText = `₹${netBalance.toLocaleString('en-IN')}`;
+            balanceTextNode.innerText = '₹' + netBalance.toLocaleString('en-IN');
 
             if (netBalance >= 0) {
-                balanceCardNode.className = "bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl transition-all duration-300";
+                balanceCardNode.className = "bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl";
                 balanceTextNode.className = "text-2xl font-black mt-3 text-emerald-400 tracking-tight";
                 balanceEmojiNode.innerText = "💰";
             } else {
-                balanceCardNode.className = "bg-gradient-to-br from-slate-900 via-rose-950/20 to-slate-900 border border-rose-500/30 p-5 rounded-2xl shadow-xl transition-all duration-300";
+                balanceCardNode.className = "bg-gradient-to-br from-slate-900 via-rose-950/20 to-slate-900 border border-rose-500/30 p-5 rounded-2xl shadow-xl";
                 balanceTextNode.className = "text-2xl font-black mt-3 text-rose-400 tracking-tight";
                 balanceEmojiNode.innerText = "⚠️";
             }
 
-            const totalScaleMax = Math.max(inc, exp, 1);
-            const incPercentage = (inc / totalScaleMax) * 100;
-            const expPercentage = (exp / totalScaleMax) * 100;
-
-            document.getElementById('chart-container').innerHTML = `
-                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                    <div style="height: ${incPercentage}%" class="w-full max-w-[45px] bg-emerald-500 rounded-t-md min-h-[4px] shadow-[0_0_10px_rgba(16,185,129,0.2)] transition-all duration-500"></div>
-                    <span class="text-[9px] text-slate-400 mt-1.5 font-medium">In (${Math.round(incPercentage)}%)</span>
-                </div>
-                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                    <div style="height: ${expPercentage}%" class="w-full max-w-[45px] bg-rose-500 rounded-t-md min-h-[4px] shadow-[0_0_10px_rgba(244,63,94,0.2)] transition-all duration-500"></div>
-                    <span class="text-[9px] text-slate-400 mt-1.5 font-medium">Out (${Math.round(expPercentage)}%)</span>
-                </div>
-            `;
-
+            // Render Ledger
             const ledgerElement = document.getElementById('ledger-list');
             if (filteredLedger.length === 0) {
-                ledgerElement.innerHTML = `<p class="text-slate-600 text-center text-[11px] py-6">No records match this selected filter timeframe.</p>`;
+                ledgerElement.innerHTML = '<p class="text-slate-600 text-center text-[11px] py-6">No records match this timeframe.</p>';
             } else {
                 let ledgerHTML = '';
                 for (let i = filteredLedger.length - 1; i >= 0; i--) {
@@ -340,9 +299,10 @@
                 ledgerElement.innerHTML = ledgerHTML;
             }
 
+            // Render Khata Book
             const khataElement = document.getElementById('khata-list');
             if (activeKhata.length === 0) {
-                khataElement.innerHTML = `<p class="text-slate-600 text-center text-[11px] py-6">No pending credits or debits registered.</p>`;
+                khataElement.innerHTML = '<p class="text-slate-600 text-center text-[11px] py-6">No pending credits or debits registered.</p>';
             } else {
                 let khataHTML = '';
                 for (let i = activeKhata.length - 1; i >= 0; i--) {
@@ -354,4 +314,24 @@
                                 <span class="text-[9px] inline-block mt-0.5 px-2 py-0.2 rounded font-medium ${item.type === 'receive' ? 'text-sky-400 bg-sky-500/10' : 'text-amber-400 bg-amber-500/10'}">
                                     ${item.type === 'receive' ? 'Lena Hai' : 'Dena Hai'}
                                 </span>
-                            </
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold ${item.type === 'receive' ? 'text-sky-400' : 'text-amber-400'}">
+                                    ₹${item.amount.toLocaleString('en-IN')}
+                                </span>
+                                <button onclick="clearKhataItem('${item.id}')" class="bg-slate-900 border border-slate-800 text-[10px] font-semibold px-2 py-1 rounded-lg transition">
+                                    ✓ Clear
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                khataElement.innerHTML = khataHTML;
+            }
+        }
+
+        // Run
+        syncPipeline();
+    </script>
+</body>
+</html>
