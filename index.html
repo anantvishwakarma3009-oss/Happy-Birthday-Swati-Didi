@@ -1,18 +1,14 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinVue Pro - Advanced Mobile Edition</title>
+    <title>FinVue Pro - Ultimate Mobile Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .custom-scrollbar::-webkit-scrollbar { display: none; }
-        /* Chrome Mobile Safe Chart Styling */
-        progress::-webkit-progress-bar { background-color: #020617; border-radius: 8px; }
-        progress.inc-bar::-webkit-progress-value { background-color: #10b981; border-radius: 8px; }
-        progress.exp-bar::-webkit-progress-value { background-color: #f43f5e; border-radius: 8px; }
     </style>
 </head>
 <body class="bg-[#0f172a] text-slate-100 min-h-screen antialiased px-4 py-6">
@@ -35,7 +31,7 @@
             <button onclick="setFilter('year')" id="btn-year" class="flex-1 min-w-[65px] text-center py-2 rounded-lg text-[11px] font-semibold transition text-slate-400">Yearly</button>
         </div>
 
-        <div id="balance-card" class="bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl">
+        <div id="balance-card" class="bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-5 rounded-2xl shadow-xl transition-all duration-200">
             <div class="flex justify-between items-center">
                 <div>
                     <span id="label-balance" class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">Net Balance (All Time)</span>
@@ -65,24 +61,22 @@
             </div>
         </div>
 
-        <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-lg space-y-3">
-            <span id="chart-title" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Visual Chart (All Time)</span>
-            
-            <div class="space-y-2">
-                <div>
-                    <div class="flex justify-between text-[10px] text-emerald-400 font-medium mb-1">
-                        <span>Total Income Ratio</span>
-                        <span id="chart-inc-ratio">0%</span>
-                    </div>
-                    <progress id="chart-bar-inc" class="inc-bar w-full h-2 appearance-none block" value="0" max="100"></progress>
+        <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <span id="chart-title" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Visual Chart (All Time)</span>
+                <div class="flex gap-2 text-[8px] font-semibold uppercase">
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 bg-emerald-500 rounded-sm"></span><span class="text-slate-400">In</span></div>
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 bg-rose-500 rounded-sm"></span><span class="text-slate-400">Out</span></div>
                 </div>
-                
-                <div>
-                    <div class="flex justify-between text-[10px] text-rose-400 font-medium mb-1">
-                        <span>Total Expense Ratio</span>
-                        <span id="chart-exp-ratio">0%</span>
-                    </div>
-                    <progress id="chart-bar-exp" class="exp-bar w-full h-2 appearance-none block" value="0" max="100"></progress>
+            </div>
+            <div class="h-28 flex items-end justify-center gap-12 border-b border-slate-800 pb-2 px-4">
+                <div class="w-12 flex flex-col items-center h-full justify-end">
+                    <div id="graph-bar-inc" class="w-full bg-emerald-500 rounded-t-md min-h-[4px] shadow-[0_0_10px_rgba(16,185,129,0.2)] transition-all duration-300" style="height: 0%"></div>
+                    <span id="graph-txt-inc" class="text-[9px] text-slate-400 mt-1.5 font-medium whitespace-nowrap">In (0%)</span>
+                </div>
+                <div class="w-12 flex flex-col items-center h-full justify-end">
+                    <div id="graph-bar-exp" class="w-full bg-rose-500 rounded-t-md min-h-[4px] shadow-[0_0_10px_rgba(244,63,94,0.2)] transition-all duration-300" style="height: 0%"></div>
+                    <span id="graph-txt-exp" class="text-[9px] text-slate-400 mt-1.5 font-medium whitespace-nowrap">Out (0%)</span>
                 </div>
             </div>
         </div>
@@ -117,7 +111,7 @@
                     </div>
                 </div>
                 
-                <button type="button" id="main-submit-btn" class="w-full mt-2 bg-indigo-600 text-white font-bold text-xs uppercase p-3 rounded-xl shadow-md">
+                <button type="button" id="main-submit-btn" class="w-full mt-2 bg-indigo-600 text-white font-bold text-xs uppercase p-3 rounded-xl shadow-md active:scale-[0.99]">
                     Save Transaction
                 </button>
             </div>
@@ -142,8 +136,9 @@
         let coreDatabase = [];
         let currentFilter = 'all';
 
+        // Load Storage Safely
         try {
-            const rawData = localStorage.getItem('finvue_chrome_v7');
+            const rawData = localStorage.getItem('finvue_ultimate_v9');
             if (rawData) {
                 coreDatabase = JSON.parse(rawData);
             }
@@ -163,7 +158,7 @@
 
         document.getElementById('tx-date').value = getSafeTodayDate();
 
-        // Safe Submit Pipeline
+        // Safe Click Interceptor
         document.getElementById('main-submit-btn').addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -190,7 +185,7 @@
             });
 
             try {
-                localStorage.setItem('finvue_chrome_v7', JSON.stringify(coreDatabase));
+                localStorage.setItem('finvue_ultimate_v9', JSON.stringify(coreDatabase));
             } catch(err) {}
 
             document.getElementById('tx-desc').value = '';
@@ -202,13 +197,13 @@
 
         function deleteItem(id) {
             coreDatabase = coreDatabase.filter(item => item.id !== id);
-            try { localStorage.setItem('finvue_chrome_v7', JSON.stringify(coreDatabase)); } catch(e) {}
+            try { localStorage.setItem('finvue_ultimate_v9', JSON.stringify(coreDatabase)); } catch(e) {}
             syncPipeline();
         }
 
         function clearKhataItem(id) {
             coreDatabase = coreDatabase.filter(item => item.id !== id);
-            try { localStorage.setItem('finvue_chrome_v7', JSON.stringify(coreDatabase)); } catch(e) {}
+            try { localStorage.setItem('finvue_ultimate_v9', JSON.stringify(coreDatabase)); } catch(e) {}
             syncPipeline();
         }
 
@@ -251,6 +246,15 @@
                 return recordDate.getFullYear() === today.getFullYear();
             }
             return true;
+        }
+
+        function forceChromeRepaint() {
+            // Anti-freeze engine rule for Mobile Chrome UI redraw forcing
+            const bodyNode = document.body;
+            const originalDisplay = bodyNode.style.display;
+            bodyNode.style.display = 'none';
+            bodyNode.offsetHeight; 
+            bodyNode.style.display = originalDisplay;
         }
 
         function syncPipeline() {
@@ -299,17 +303,17 @@
                 balanceEmojiNode.innerText = "⚠️";
             }
 
-            // Safe Native Chart Multi-Engine
+            // Real Vertical Graph Computations
             const totalScaleMax = Math.max(inc, exp, 1);
             const incPercentage = Math.round((inc / totalScaleMax) * 100);
             const expPercentage = Math.round((exp / totalScaleMax) * 100);
 
-            document.getElementById('chart-inc-ratio').innerText = incPercentage + '%';
-            document.getElementById('chart-exp-ratio').innerText = expPercentage + '%';
-            document.getElementById('chart-bar-inc').value = incPercentage;
-            document.getElementById('chart-bar-exp').value = expPercentage;
+            document.getElementById('graph-bar-inc').style.height = incPercentage + '%';
+            document.getElementById('graph-bar-exp').style.height = expPercentage + '%';
+            document.getElementById('graph-txt-inc').innerText = 'In (' + incPercentage + '%)';
+            document.getElementById('graph-txt-exp').innerText = 'Out (' + expPercentage + '%)';
 
-            // Render Ledger Logs
+            // Render Ledger Streams
             const ledgerElement = document.getElementById('ledger-list');
             if (filteredLedger.length === 0) {
                 ledgerElement.innerHTML = '<p class="text-slate-600 text-center text-[11px] py-6">No records match this timeframe.</p>';
@@ -335,7 +339,7 @@
                 ledgerElement.innerHTML = ledgerHTML;
             }
 
-            // Render Khata Book Logs
+            // Render Khata Logs
             const khataElement = document.getElementById('khata-list');
             if (activeKhata.length === 0) {
                 khataElement.innerHTML = '<p class="text-slate-600 text-center text-[11px] py-6">No pending credits or debits registered.</p>';
@@ -355,4 +359,22 @@
                                 <span class="text-xs font-bold ${item.type === 'receive' ? 'text-sky-400' : 'text-amber-400'}">
                                     ₹${item.amount.toLocaleString('en-IN')}
                                 </span>
-                                <button onclick="clearKhataItem('${item.id}')" class="bg-slate-900 border border-slate-800 text-[10px] fo
+                                <button onclick="clearKhataItem('${item.id}')" class="bg-slate-900 border border-slate-800 text-[10px] font-semibold px-2 py-1 rounded-lg transition">
+                                    ✓ Clear
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                khataElement.innerHTML = khataHTML;
+            }
+
+            // Force mobile Chrome to structural re-render layout shifts
+            forceChromeRepaint();
+        }
+
+        // Boot Init
+        syncPipeline();
+    </script>
+</body>
+</html>
